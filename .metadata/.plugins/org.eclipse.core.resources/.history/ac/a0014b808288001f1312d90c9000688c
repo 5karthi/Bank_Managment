@@ -1,0 +1,51 @@
+package com.BankManag.Model;
+
+import javax.validation.constraints.Email;
+
+
+import com.BankManag.entity.AccountDetail;
+import com.sun.istack.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+// Importing all the annotations from Lombok for getter, setter, and constructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class CustomerDTO {
+
+    public CustomerDTO(String customerName2, String customerEmail2, String customerPhone2, double d) {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Instance variable with validation constraints
+    @NotNull
+    private Integer customerId; // Changed to Integer to allow for null validation
+
+    @NotNull
+    private String customerName;
+
+    @NotNull
+    private String customerAddress;
+
+    @NotNull
+    private String customerPanNo;
+
+    @NotNull
+    private Long customerAdharNo; // No need for @Size, use Long type for larger numbers
+
+    @NotNull
+    private Long customerPhone; // No need for @Size, use Long type for phone numbers
+
+    @NotNull
+    @Email
+    private String customerEmail;
+
+    private AccountDetail accountDetail;
+}

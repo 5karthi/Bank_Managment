@@ -1,0 +1,66 @@
+package com.BankManag.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.BankManag.Model.CustomerDTO;
+import com.BankManag.entity.Customer;
+import com.BankManag.service.CustomerService;
+
+@RestController
+@RequestMapping("/api/customers")
+public class CustomerController {
+
+    @Autowired
+    private CustomerService customerService;
+
+    // Endpoint to create a new customer account
+    @PostMapping
+    public ResponseEntity<String> createAccount(@RequestBody Customer customer) {
+        String response = customerService.createAccount(customer);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // Endpoint to update customer details
+    @PutMapping("/{customerId}")
+    public ResponseEntity<CustomerDTO> updateAccountDetail(@PathVariable int customerId, @RequestBody Customer customer) {
+        CustomerDTO updatedCustomer = customerService.updateAccountDetail(customerId, customer);
+        return updatedCustomer != null ? 
+                new ResponseEntity<>(updatedCustomer, HttpStatus.OK) : 
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // Endpoint to get customer details by ID
+    @GetMapping("/{customerId}")
+    public ResponseEntity<CustomerDTO> getAccountDetailByCustomerId(@PathVariable int customerId) {
+        CustomerDTO customer = customerService.getAccountDetailByCustomerId(customerId);
+        return customer != null ? 
+                new ResponseEntity<>(customer, HttpStatus.OK) : 
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // Endpoint to get all customer accounts
+    @GetMapping
+    public ResponseEntity<List<CustomerDTO>> getAllAccountDetails() {
+        List<CustomerDTO> customers = customerService.getAllAccountDetails();
+        return new ResponseEntity<>(customers, HttpStatus.OK);
+    }
+
+    // Endpoint to check balance by customer ID
+    @GetMapping("/{customerId}/balance")
+    public ResponseEntity<String> checkBalance(@PathVariable int customerId) {
+        String balanceInfo = customerService.checkBalanceById(customerId);
+        return new ResponseEntity<>(balanceInfo, HttpStatus.OK);
+    }
+
+    // Endpoint to get customers by name
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomerDTO>> getCustomersByName(@RequestParam String name) {
+        List<CustomerDTO> customers = customerService.getCustomerByName(name);
+        return new ResponseEntity<>(customers, HttpStatus.OK);
+    }
+}

@@ -1,0 +1,64 @@
+package com.BankManag.Controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.BankManag.entity.Customer;
+import com.BankManag.Model.CustomerDTO;
+import com.BankManag.service.CustomerService;
+import com.BankManag.util.CustomerConverter;
+
+@Controller
+public class CustomerController {
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private CustomerConverter customerConverter;
+
+    @PostMapping("/createAccount")
+    public String createAccount(@RequestParam String customerName, @RequestParam String customerEmail,
+                                @RequestParam String customerPhone, @RequestParam double balance, Model model) {
+        CustomerDTO customerDTO = new CustomerDTO(customerName, customerEmail, customerPhone, balance);
+        Customer customer = customerConverter.convertToEntity(customerDTO);
+        String result = customerService.createAccount(customer);
+        model.addAttribute("message", result);
+        return "result";
+    }
+
+    @PostMapping("/updateAccount")
+    public String updateAccountDetail(@RequestParam int accountId, @RequestParam(required = false) String customerName,
+                                      @RequestParam(required = false) String customerEmail,
+                                      @RequestParam(required = false) String customerPhone, Model model) {
+        CustomerDTO customerDTO = new CustomerDTO(customerName, customerEmail, customerPhone, 0.0);  // balance is not updated here
+        Customer customer = customerConverter.convertToEntity(customerDTO);
+        CustomerDTO updatedCustomer = customerService.updateAccountDetail(accountId, customer);
+        model.addAttribute("customer", updatedCustomer);
+        return "viewCustomerDetails";
+    }
+
+    @GetMapping("/getAccountDetailByCustomerId")
+    public String getAccountDetailByCustomerId(@RequestParam int accountId, Model model) {
+        CustomerDTO customerDTO = customerService.getAccountDetailByCustomerId(accountId);
+        model.addAttribute("customer", customerDTO);
+        return "viewCustomerDetails";
+    }
+
+    @GetMapping("/checkBalance")
+    public String checkBalance(@RequestParam int accountId, Model model) {
+        String result = customerService.checkBalanceById(accountId);
+        model.addAttribute("message", result);
+        return "result";
+    }
+
+    @GetMapping("/customerByName")
+    public String getCustomerByName(@RequestParam String customerName, Model model) {
+        model.addAttribute("customers", customerService.getCustomerByName(customerName));
+        return "viewCustomerDetails"; // Should loop over customers to show details
+    }
+}

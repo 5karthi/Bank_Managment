@@ -1,0 +1,5 @@
+package com.BankManag.config;
+
+public class MailConfig {
+
+}

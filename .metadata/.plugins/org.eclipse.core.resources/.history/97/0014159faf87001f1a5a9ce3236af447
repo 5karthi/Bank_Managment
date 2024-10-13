@@ -1,0 +1,5 @@
+package com.BankManag.service;
+
+public interface BankTransactionService {
+
+}

@@ -1,0 +1,57 @@
+package com.BankManag.Model;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.Email;
+
+
+import com.BankManag.entity.AccountDetail;
+import com.sun.istack.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+// Importing all the annotations from Lombok for getter, setter, and constructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class CustomerDTO {
+
+	    private String customerName;
+	    private String customerEmail;
+	    private String customerPhone;
+	    private double balance;
+	    private String customerAddress;
+	    private String customerPanNo;
+	    private long customerAdharNo;
+	    private LocalDate customerDob;  // Ensure this is LocalDate or String if you're parsing it elsewhere
+	    private String customerNationality;
+	    private String customerGender;
+
+	    // Default constructor
+	    public CustomerDTO() {}
+
+	    // Constructor with parameters
+	    public CustomerDTO(String customerName, String customerEmail, String customerPhone, double balance, 
+	                       String customerAddress, String customerPanNo, long customerAdharNo, 
+	                       LocalDate customerDob, String customerNationality, String customerGender) {
+	        this.customerName = customerName;
+	        this.customerEmail = customerEmail;
+	        this.customerPhone = customerPhone;
+	        this.balance = balance;
+	        this.customerAddress = customerAddress;
+	        this.customerPanNo = customerPanNo;
+	        this.customerAdharNo = customerAdharNo;
+	        this.customerDob = customerDob;
+	        this.customerNationality = customerNationality;
+	        this.customerGender = customerGender;
+	    }
+
+	    // Getters and Setters for each field
+	    // ...
+	}

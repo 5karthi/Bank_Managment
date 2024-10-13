@@ -1,0 +1,53 @@
+package com.BankManag.Model;
+
+import javax.validation.constraints.Email;
+
+
+import org.hibernate.annotations.BatchSize;
+
+import com.BankManag.entity.AccountDetail;
+import com.sun.istack.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+// Importing all the annotations from Lombok for getter, setter, and constructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class CustomerDTO {
+
+    // Instance variable with validation constraints
+    @NotNull
+    @BatchSize(size = 1)
+    private Integer customerId; // Changed to Integer to allow for null validation
+
+    @NotNull
+    @BatchSize(size = 1)
+    private String customerName;
+
+    @NotNull
+    @BatchSize(size = 1)
+    private String customerAddress;
+
+    @NotNull
+    @BatchSize(size = 1)
+    private String customerPanNo;
+
+    @NotNull
+    private Long customerAdharNo; // No need for @Size, use Long type for larger numbers
+
+    @NotNull
+    private Long customerPhone; // No need for @Size, use Long type for phone numbers
+
+    @NotNull
+    @Email
+    private String customerEmail;
+
+    private AccountDetail accountDetail;
+}

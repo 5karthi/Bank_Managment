@@ -1,0 +1,113 @@
+package com.BankManag.Controller;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.BankManag.entity.Customer;
+import com.BankManag.Model.CustomerDTO;
+import com.BankManag.service.CustomerService;
+import com.BankManag.util.CustomerConverter;
+
+@Controller
+@RequestMapping("/api/customers") // Base URL for the controller
+public class CustomerController {
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private CustomerConverter customerConverter;
+
+    // ----------------- JSP Mappings -------------------- 
+
+    // For creating customer account via form (JSP)
+    @PostMapping
+    public ResponseEntity<String> createAccount(@RequestBody CustomerDTO customerDTO) {
+        Customer customer = customerConverter.convertToEntity(customerDTO);
+        String response = customerService.createAccount(customer);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // For updating customer account details via JSP form
+    @PostMapping("/update")
+    public String updateAccountDetail(@RequestParam int accountId,
+                                      @RequestParam(required = false) String customerName,
+                                      @RequestParam(required = false) String customerEmail,
+                                      @RequestParam(required = false) String customerPhone,
+                                      @RequestParam(required = false) String customerAddress,
+                                      @RequestParam(required = false) String customerPanNo,
+                                      @RequestParam(required = false) Long customerAdharNo,
+                                      @RequestParam(required = false) String customerDob,
+                                      @RequestParam(required = false) String customerNationality,
+                                      @RequestParam(required = false) String customerGender,
+                                      Model model) {
+        LocalDate dob = (customerDob != null) ? LocalDate.parse(customerDob) : null;
+        CustomerDTO customerDTO = new CustomerDTO(customerName, customerEmail, customerPhone, 0.0,
+                customerAddress, customerPanNo, customerAdharNo,
+                dob, customerNationality, customerGender);
+
+        Customer customer = customerConverter.convertToEntity(customerDTO);
+        CustomerDTO updatedCustomer = customerService.updateAccountDetail(accountId, customer);
+        model.addAttribute("customer", updatedCustomer);
+        return "viewCustomerDetails";  // JSP file to display the customer details
+    }
+
+    // Fetching account details and displaying in JSP
+    @GetMapping("/{accountId}")
+    public String getAccountDetailByCustomerId(@PathVariable int accountId, Model model) {
+        CustomerDTO customerDTO = customerService.getAccountDetailByCustomerId(accountId);
+        model.addAttribute("customer", customerDTO);
+        return "viewCustomerDetails";  // JSP page
+    }
+
+    // Checking balance via JSP form
+    @GetMapping("/{accountId}/balance")
+    public String checkBalance(@PathVariable int accountId, Model model) {
+        String result = customerService.checkBalanceById(accountId);
+        model.addAttribute("message", result);
+        return "result";  // JSP page to display the balance
+    }
+
+    // ----------------- JSON API Mappings -------------------- 
+
+    // For updating customer account via API (POSTMAN)
+    @PutMapping("/{accountId}")
+    public ResponseEntity<CustomerDTO> updateAccountDetailAPI(@PathVariable int accountId,
+                                                               @RequestBody CustomerDTO customerDTO) {
+        Customer customer = customerConverter.convertToEntity(customerDTO);
+        CustomerDTO updatedCustomer = customerService.updateAccountDetail(accountId, customer);
+        return updatedCustomer != null ?
+                new ResponseEntity<>(updatedCustomer, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // Fetching customer details via API (JSON response)
+    @GetMapping("/{accountId}")
+    public ResponseEntity<CustomerDTO> getAccountDetailByCustomerIdAPI(@PathVariable int accountId) {
+        CustomerDTO customer = customerService.getAccountDetailByCustomerId(accountId);
+        return customer != null ?
+                new ResponseEntity<>(customer, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // Checking balance via API (JSON response)
+    @GetMapping("/{accountId}/balance")
+    public ResponseEntity<String> checkBalanceAPI(@PathVariable int accountId) {
+        String balanceInfo = customerService.checkBalanceById(accountId);
+        return new ResponseEntity<>(balanceInfo, HttpStatus.OK);
+    }
+
+    // Fetch customer by name (JSON response)
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomerDTO>> getCustomerByNameAPI(@RequestParam String customerName) {
+        List<CustomerDTO> customers = customerService.getCustomerByName(customerName);
+        return new ResponseEntity<>(customers, HttpStatus.OK);
+    }
+}

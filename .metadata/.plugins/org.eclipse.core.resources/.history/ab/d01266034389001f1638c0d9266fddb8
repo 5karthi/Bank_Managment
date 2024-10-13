@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History</title>
+</head>
+<body>
+    <h1>View Transaction History</h1>
+    <form action="transactionHistory" method="get">
+        <label>Account ID: </label><input type="number" name="accountId" required><br>
+        <input type="submit" value="View History">
+    </form>
+</body>
+</html>

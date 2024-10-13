@@ -1,0 +1,24 @@
+package com.BankManag.Controller;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.BankManag.entity.AccountDetail;
+
+public class AccountController<AccountService> {
+
+    @Autowired
+    private AccountService accountService;
+
+    @PostMapping
+    public ResponseEntity<AccountDetail> createAccount(@Valid @RequestBody AccountDetail accountDetail) {
+        AccountDetail createdAccount = ((Object) accountService).createAccount(accountDetail);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
+    }
+}
+

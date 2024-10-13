@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Details</title>
+</head>
+<body>
+    <h1>Customer Details</h1>
+    <p>ID: ${customer.customerId}</p>
+    <p>Name: ${customer.customerName}</p>
+    <p>Email: ${customer.customerEmail}</p>
+    <p>Phone: ${customer.customerPhone}</p>
+    <p>Balance: ${customer.balance}</p>
+    <a href="customerHome">Go Back</a>
+</body>
+</html>
